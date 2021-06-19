@@ -1,18 +1,13 @@
 import { Auth } from 'aws-amplify';
+import SocialSignIn from './SocialSignIn';
 
-export default function SignIn() {
+export default function SignIn({
+  onChange, setUiState
+}) {
   return (
     <div>
-      <button
-        onClick={() => Auth.federatedSignIn({ provider: 'Google' })}
-      >
-        Sign in with Google
-      </button>
-      <button
-        onClick={() => Auth.federatedSignIn({ provider: 'Facebook' })}
-      >
-        Sign in with Facebook
-      </button>
+      <p className="text-3xl font-black">Sign in to your account</p>
+      <SocialSignIn />
     </div>
   );
 };
