@@ -1,5 +1,12 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { withSSRContext } from 'aws-amplify';
+import '../../configureAmplify';
 
-export default (req, res) => {
-  res.status(200).json({ name: 'John Doe' })
+export default async (req, res) => {
+  try {
+    const { Auth } = withSSRContext({ req });
+    const user = await Auth.currentAuthenticatedUser();
+    console.log('user: ', user);
+  
+    res.status(200).json({ name: user })
+  } catch (err) { console.log({ err }); }
 }
