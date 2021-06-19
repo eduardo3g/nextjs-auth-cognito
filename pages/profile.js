@@ -13,24 +13,67 @@ function Profile() {
   const [uiState, setUiState] = useState(null);
   const [formState, setFormState] = useState(initialState);
   const [user, setUser] = useState(null);
+  const { email, password, authCode } = formState;
 
-  useEffect(() => {
-    checkUser();
-
-    async function checkUser() {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        setUser(user);
-        setUiState('signedIn');
-      } catch (err) {
-        setUser(null);
-        setUiState('signIn');
-      }
-    }
+  useEffect(async () => {
+    await checkUser();
   }, []);
 
-  function onChange(event) {
-    setFormState({ ...formState, [event.target.name]: e.target.value });
+  async function checkUser() {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      setUser(user);
+      setUiState('signedIn');
+    } catch (err) {
+      setUser(null);
+      setUiState('signIn');
+    }
+  }
+
+  function onChange(e) {
+    setFormState({ ...formState, [e.target.name]: e.target.value });
+  }
+
+  async function signUp() {
+    try {
+      await Auth.signUp({
+        username: email,
+        password,
+        attributes: { email },
+      });
+
+      setUiState('confirmSignUp');
+    } catch (err) { console.log({ err }); }
+  }
+  async function confirmSignUp() {
+    try {
+      await Auth.confirmSignUp(email, authCode);
+
+      setUiState('signedIn');
+      signIn();
+    } catch (err) { console.log({ err }); }
+  }
+  async function signIn() {
+    try {
+      await Auth.signIn(email, password);
+
+      setUiState('signedIn');
+      await checkUser();
+    } catch (err) { console.log({ err }); }
+  }
+  async function forgotPassword() {
+    try {
+      await Auth.forgotPassword(email);
+
+      setUiState('forgotPasswordSubmit')
+    } catch (err) { console.log({ err }); }
+  }
+  async function forgotPasswordSubmit() {
+    try {
+      await Auth.forgotPasswordSubmit(email, authCode, password);
+
+      setUiState('signIn');
+    } catch (err) { console.log({ err }); }
   }
 
   return (
@@ -45,6 +88,7 @@ function Profile() {
                 <SignUp
                   onChange={onChange}
                   setUiState={setUiState}
+                  signUp={signUp}
                 />
               )  
             }
@@ -53,6 +97,7 @@ function Profile() {
                 <ConfirmSignUp
                   onChange={onChange}
                   setUiState={setUiState}
+                  confirmSignUp={confirmSignUp}
                 />
               )  
             }
@@ -61,11 +106,12 @@ function Profile() {
                 <SignIn
                   onChange={onChange}
                   setUiState={setUiState}
+                  signIn={signIn}
                 />
               )
             }
             {
-              uiState === 'signedIn' && (
+              (uiState === 'signedIn' && user) && (
                 <div>
                   <p
                     className="text-xl"
@@ -86,6 +132,7 @@ function Profile() {
                 <ForgotPassword
                   onChange={onChange}
                   setUiState={setUiState}
+                  forgotPassword={forgotPassword}
                 />
               )  
             }
@@ -93,6 +140,7 @@ function Profile() {
               uiState === 'forgotPasswordSubmit' && (
                 <ForgotPasswordSubmit
                   onChange={onChange}
+                  forgotPasswordSubmit={forgotPasswordSubmit}
                 />
               )  
             }
