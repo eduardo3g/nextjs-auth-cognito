@@ -18,7 +18,7 @@ export default function SignIn({
           Password
           <span
             onClick={() => setUiState('forgotPassword')}
-            className=" text-sm ml-2 sm:ml-48 text-pink-600"
+            className=" text-sm ml-2 sm:ml-48 text-pink-600 cursor-pointer"
           >
             Forgot you password?
           </span>
