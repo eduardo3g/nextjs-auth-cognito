@@ -3,6 +3,9 @@ import { Auth } from 'aws-amplify';
 import '../configureAmplify';
 import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
+import ConfirmSignUp from '../components/ConfirmSignUp';
+import ForgotPassword from '../components/ForgotPassword';
+import ForgotPasswordSubmit from '../components/ForgotPasswordSubmit';
 
 const initialState = { email: '', password: '', authCode: '' };
 
@@ -46,6 +49,14 @@ function Profile() {
               )  
             }
             {
+              uiState === 'confirmSignUp' && (
+                <ConfirmSignUp
+                  onChange={onChange}
+                  setUiState={setUiState}
+                />
+              )  
+            }
+            {
               uiState === 'signIn' && (
                 <SignIn
                   onChange={onChange}
@@ -69,6 +80,21 @@ function Profile() {
                   >Sign out</button>
                 </div>
               )
+            }
+            {
+              uiState === 'forgotPassword' && (
+                <ForgotPassword
+                  onChange={onChange}
+                  setUiState={setUiState}
+                />
+              )  
+            }
+            {
+              uiState === 'forgotPasswordSubmit' && (
+                <ForgotPasswordSubmit
+                  onChange={onChange}
+                />
+              )  
             }
           </div>
         </div>
