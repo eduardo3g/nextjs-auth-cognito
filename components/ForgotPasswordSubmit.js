@@ -11,7 +11,7 @@ export default function ForgotPasswordSubmit({
         <Input onChange={onChange} name="authCode" />
       </div>
 
-      <div className="mt-10">
+      <div className="mt-6">
         <label className="text-sm">New password</label>
         <Input onChange={onChange} name="password" type="password" />
       </div>
